@@ -48,7 +48,7 @@ exports.homePage = async (req, res, next) => {
 
     res.render('./store/vender.ejs', {
       events,
-      title: "Events",
+      title: "Eventify",
       opacity,
       currentPage: 'home',
       isLogedIn: req.isLogedIn,
