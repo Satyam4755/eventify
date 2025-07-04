@@ -1,0 +1,203 @@
+<%- include('../partials/head') %>
+<%- include('../partials/background') %>
+
+<style>
+  body {
+    background: #f3f8ff;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  .container {
+    max-width: 95%;
+    margin: auto;
+    margin-top: 80px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 80, 200, 0.1);
+    overflow-x: auto;
+    border: 2px solid #d0e6ff;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 35px;
+    color: #0077cc;
+    font-weight: 700;
+    font-size: 36px;
+    text-shadow: 1px 1px 0px #b3d9ff;
+  }
+
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    min-width: 1000px;
+    border-collapse: collapse;
+    background-color: #f0f8ff;
+    border: 1px solid #cce0ff;
+  }
+
+  thead {
+    background-color: #0077cc;
+    color: #fff;
+  }
+
+  th, td {
+    padding: 16px 20px;
+    text-align: center;
+    font-size: 16px;
+    border-bottom: 1px solid #cce0ff;
+  }
+
+  tr:nth-child(even) {
+    background-color: #e6f2ff;
+  }
+
+  tr:hover {
+    background-color: #cce6ff;
+    transition: background-color 0.3s ease;
+  }
+
+  td {
+    color: #2c3e50;
+  }
+
+  p {
+    text-align: center;
+    font-size: 18px;
+    color: #777;
+    margin-top: 20px;
+  }
+
+  a {
+    color: #0077cc;
+    text-decoration: underline;
+  }
+
+  @media screen and (max-width: 768px) {
+    .container {
+      padding: 20px 15px;
+    }
+
+    table, thead, tbody, th, td, tr {
+      display: block;
+    }
+
+    tbody{
+      width: fit-content;
+    }
+
+    table {
+      width: 40px;
+      background-color: transparent;
+      border-color: transparent;
+      overflow-x: scroll;
+    }
+    thead {
+      display: none;
+    }
+
+    tr {
+      margin-bottom: 25px;
+      width: fit-content;
+      border: 1px solid #cce0ff;
+      border-radius: 12px;
+      padding: 15px;
+      background: #e6f2ff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    td {
+      width: 70vw;
+      text-align: left;
+      padding: 14px 16px;
+      position: relative;
+      font-size: 15px;
+      border: none;
+      color: #2c3e50;
+      background-color: #ffffff;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+
+    td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      font-size: 14px;
+      color: #0077cc;
+      display: block;
+      margin-bottom: 8px;
+    }
+  }
+  .badaDabba{
+    margin-bottom: 15%;
+  }
+</style>
+
+<%- include('../partials/nav') %>
+<div class="badaDabba">
+  <div class="container">
+    <h1>🎟️ Event Bookings</h1>
+
+    <% if (!isOrganizer) { %>
+      <p>You haven’t added any events yet. <a href="/organizer/add-event">Add one now</a>.</p>
+    <% } else if (orders.length === 0) { %>
+      <p>No bookings yet.</p>
+    <% } else { %>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Attendee Name</th>
+              <th>Phone</th>
+              <th>Email</th>
+              <th>Tickets</th>
+              <th>Total Amount</th>
+              <th>Booking Date</th>
+              <th>Payment Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% orders.forEach(order => { %>
+              <tr>
+                <td data-label="Event">
+                  <%= order.event ? order.event.title : 'Deleted Event' %>
+                </td>
+                <td data-label="Attendee Name">
+                  <%= order.name || (order.attendee && order.attendee.name) || 'Unknown' %>
+                </td>
+                <td data-label="Phone">
+                  <%= order.phone || 'N/A' %>
+                </td>
+                <td data-label="Email">
+                  <%= order.email || (order.attendee && order.attendee.email) || 'N/A' %>
+                </td>
+                <td data-label="Tickets">
+                  <%= order.numberOfTickets %>
+                </td>
+                <td data-label="Total Amount">
+                  <%=order.totalAmount==0?'Free':'₹' + order.totalAmount %>
+                </td>
+                <td data-label="Booking Date">
+                  <%= order.preferredDate ? order.preferredDate.toDateString() : 'N/A' %>
+                </td>
+                <td data-label="Payment Status">
+                  <%= order.payment || 'Pending' %>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
+</body>
+</html>

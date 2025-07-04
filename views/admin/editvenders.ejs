@@ -1,0 +1,323 @@
+<%-include('../partials/head')%>
+<%-include('../partials/nav')%>
+<%-include('../partials/background')%>
+<style>
+
+  .schedule-container {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.schedule-block {
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: #f7f9fc;
+}
+
+.schedule-block label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #555;
+}
+
+.schedule-block input {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 10px;
+}
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        color: #042bb7;
+        text-align: center;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        font-size: 2rem;
+    }
+
+    .form-container {
+        background-color: white;
+        /* width: 90%; */
+        width:40%;
+        margin: auto;
+        padding: 2rem;
+        border-radius: 20px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container input,
+    .form-container select {
+        padding: 12px;
+        width: 100%;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        font-size: 1rem;
+        transition: border 0.3s;
+        box-sizing: border-box;
+    }
+
+    .form-container input:focus {
+        border-color: #ff5a5f;
+        outline: none;
+    }
+
+    .form-container button {
+        padding: 12px 24px;
+        background-color: #3773e1;
+        color: white;
+        font-size: 1rem;
+        border: none;
+        border-radius: 30px;
+        cursor: pointer;
+        margin-top: 10px;
+        width: 100%;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .form-container button:hover {
+        background-color: #e0484d;
+        transform: scale(1.05);
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-top: 6px;
+        font-size: 0.9rem;
+        color: #555;
+    }
+    .img1 {
+    position: absolute;
+    top: 15%;
+    left: 2.5%;
+    width: 25vw;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 42% 58% 65% 35% / 40% 30% 70% 60%;
+    transition: transform 0.4s ease;
+    z-index: -1;
+    }
+    .img2 {
+    position: absolute;
+    top: 40%;
+    right: 2.5%;
+    width: 25vw;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 100% 50% 100% 50% / 60% 40% 60% 40%;
+    transition: transform 0.3s ease;
+    z-index: -1;
+}
+
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 1.5rem;
+            margin: 1.5rem 1rem 1rem;
+        }
+
+        .form-container {
+            padding: 1.5rem 1rem;
+            width: 90%;
+        }
+
+        .form-container input,
+        .form-container button {
+            font-size: 0.95rem;
+            padding: 10px;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+        }
+
+        .form-container button {
+            padding: 10px 18px;
+            font-size: 0.95rem;
+        }
+    }
+    .badaDabba{
+        margin-bottom: 15%;
+    }
+</style>
+<div class="badaDabba">
+  <h1><%= editing ? "Edit Your Event Details" : "Add Your Event Details" %></h1>
+
+  <div class="form-container">
+    <form id="eventForm" action="/vender/<%= editing ? 'edit-event' : 'add-event' %>" method="post" enctype="multipart/form-data">
+      <input type="hidden" name="id" value="<%= editing ? event._id : '' %>">
+
+      <!-- Main Image -->
+      <div class="form-group">
+        <input type="file" name="image" accept="image/*">
+      </div>
+
+      <!-- Banner Image -->
+      <div class="form-group">
+        <input type="file" name="bannerImage" accept="image/*">
+      </div>
+
+      <!-- Title -->
+      <div class="form-group">
+        <input type="text" name="title" value="<%= editing ? event.title : '' %>" placeholder="🎤 Event Title" required>
+      </div>
+
+      <!-- Category -->
+      <div class="form-group">
+        <select name="category" required>
+          <option value="" disabled <%= !editing ? 'selected' : '' %>>📂 Select Category</option>
+          <option value="Music" <%= editing && event.category === 'Music' ? 'selected' : '' %>>🎵 Music</option>
+          <option value="Tech" <%= editing && event.category === 'Tech' ? 'selected' : '' %>>💻 Tech</option>
+          <option value="Business" <%= editing && event.category === 'Business' ? 'selected' : '' %>>📊 Business</option>
+          <option value="Education" <%= editing && event.category === 'Education' ? 'selected' : '' %>>📚 Education</option>
+          <option value="Health" <%= editing && event.category === 'Health' ? 'selected' : '' %>>💉 Health</option>
+          <option value="Sports" <%= editing && event.category === 'Sports' ? 'selected' : '' %>>🏅 Sports</option>
+          <option value="Other" <%= editing && event.category === 'Other' ? 'selected' : '' %>>📌 Other</option>
+        </select>
+      </div>
+
+      <!-- Ticket Price -->
+      <div class="form-group">
+        <input type="number" name="ticketPrice" value="<%= editing ? event.ticketPrice : '' %>" placeholder="💰 Ticket Price" required>
+      </div>
+
+      <!-- Location -->
+      <div class="form-group">
+        <input type="text" name="location" value="<%= editing ? event.location : '' %>" placeholder="📍 Event Location" required>
+      </div>
+
+      
+<!-- Event Days Count -->
+<div class="form-group">
+  <label for="eventCount">📅 Number of Event Days</label>
+  <input
+    type="number"
+    id="eventCount"
+    name="eventCount"
+    min="1"
+    value="<%= editing && event.dates ? event.dates.length : 1 %>"
+    required
+  >
+</div>
+
+<!-- Dates & Times Fields Render Here -->
+<div id="eventScheduleContainer" class="schedule-container"></div>
+
+<!-- Description -->
+<div class="form-group">
+  <textarea name="description" placeholder="📋 Write Description"><%= editing ? event.description : '' %></textarea>
+</div> 
+
+<!-- Rules -->
+<div class="form-group">
+  <textarea name="rules" placeholder="📋 Event Rules"><%= editing ? event.rules : '' %></textarea>
+</div>
+
+<!-- Submit -->
+<button onclick="loading()" type="submit">
+  <%= editing ? "✨ Update Event" : "🎉 Add Event" %>
+</button>
+    
+</form>
+      
+
+    
+  </div>
+</div>
+
+<!-- ✅ Embed Dates & Times from DB -->
+<% if (editing && event && event.dates) { %>
+  <script id="existingDatesJson" type="application/json">
+    <%- JSON.stringify(event.dates.map(d => new Date(d).toISOString().split('T')[0])) %>
+  </script>
+
+  <script id="existingTimesJson" type="application/json">
+    <%- JSON.stringify(event.times || []) %>
+  </script>
+<% } %>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    
+    const scheduleContainer = document.getElementById('eventScheduleContainer');
+    const eventCountInput = document.getElementById('eventCount');
+
+    let existingDates = [];
+    let existingTimes = [];
+
+    try {
+      existingDates = JSON.parse(document.getElementById('existingDatesJson').textContent || '[]');
+      existingTimes = JSON.parse(document.getElementById('existingTimesJson').textContent || '[]');
+    } catch (e) {
+      console.warn("Could not parse embedded JSON:", e);
+    }
+
+    function renderEventSchedule(count) {
+      scheduleContainer.innerHTML = '';
+      let initialTime = '';
+
+      for (let i = 0; i < count; i++) {
+        const dateVal = existingDates[i] || '';
+        const timeVal = existingTimes[i] || '';
+
+        const block = document.createElement('div');
+        block.classList.add('schedule-block');
+        block.style.background = "#f8f9fa";
+        block.style.padding = "10px";
+        block.style.marginBottom = "10px";
+        block.style.borderRadius = "6px";
+
+        block.innerHTML = `
+          <label><strong>📅 Date for Event ${i + 1}</strong></label>
+          <input type="date" name="eventDates[]" value="${dateVal}" required>
+
+          <label><strong>⏰ Time for Event ${i + 1}</strong></label>
+          <input type="time" name="eventTimes[]" value="${timeVal}" required>
+        `;
+
+        scheduleContainer.appendChild(block);
+
+        if (i === 0) {
+          const timeInput = block.querySelector('input[type="time"]');
+          initialTime = timeVal;
+          timeInput.addEventListener('input', e => {
+            initialTime = e.target.value;
+            const allTimeInputs = document.querySelectorAll('input[name="eventTimes[]"]');
+            allTimeInputs.forEach((input, idx) => {
+              if (idx > 0) input.value = initialTime;
+            });
+          });
+        }
+      }
+    }
+
+    const initialCount = parseInt(eventCountInput.value) || 1;
+    renderEventSchedule(initialCount);
+
+    eventCountInput.addEventListener('input', () => {
+      const count = parseInt(eventCountInput.value) || 1;
+      renderEventSchedule(count);
+    });
+  });
+</script>
+
+<%- include('../partials/loading') %>
+<%- include('../partials/footer') %>
+    
+</body>
+</html>

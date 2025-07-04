@@ -1,0 +1,373 @@
+<%- include('../partials/head') %>
+<%- include('../partials/background') %>
+<style>
+  body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #fceff9, #e0f7fa);
+  margin: 0;
+  padding: 0;
+}
+
+.mainDabba {
+  margin: 40px auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 50px;
+  padding: 0 20px;
+  max-width: 1400px;
+}
+
+.card-section,
+.center-section,
+.reviews-panel {
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  padding: 24px;
+  transition: all 0.3s ease;
+  width: fit-content;
+  max-width: 85%;
+}
+
+.card-section,.reviews-panel  {
+  height: fit-content;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.card-section h2 {
+  font-size: 26px;
+  text-align: center;
+  color: #6a11cb;
+  margin-bottom: 10px;
+}
+.reviews-panel {
+  width: 20%;
+}
+.description-box,
+.rules-box {
+  background: #f9f1ff;
+  padding: 14px 18px;
+  border-left: 5px solid #f953c6;
+  border-radius: 10px;
+  font-size: 15.5px;
+  font-style: italic;
+  color: #444;
+  max-width: 300px;
+}
+
+.center-section .event-img {
+  max-width: 100%;
+  max-height: 300px;
+  margin: 0 auto 16px;
+  display: block;
+  border-radius: 16px;
+  object-fit: cover;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.info-line {
+  margin-bottom: 14px;
+  font-size: 15.5px;
+  color: #333;
+  border-bottom: 1px dashed #ddd;
+  padding-bottom: 6px;
+}
+
+.label {
+  font-weight: bold;
+  color: #5c2e91;
+}
+
+.review_list {
+  max-height: 250px;
+  overflow-y: auto;
+  margin-top: 14px;
+  padding-right: 6px;
+}
+
+.review-item {
+  background: #f0fbff;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #cce7ff;
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: #333;
+}
+
+.organizer-box,
+.attendees-section {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 24px;
+  border-left: 4px solid #00c9a7;
+  width: fit-content;
+  max-width: 100%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.organizer-profile {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.organizer-img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #d63384;
+}
+
+.organizer-info p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.attendee-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.attendee-card {
+  text-align: center;
+  width: 75px;
+  p{
+    margin-top: 0;
+  }
+}
+
+.attendee-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #ccc;
+  /* margin-bottom: 6px; */
+}
+
+.btn,
+.submit_btn,
+.add_btn {
+  background: linear-gradient(to right, #6a11cb, #2575fc);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover,
+.submit_btn:hover,
+.add_btn:hover {
+  background: linear-gradient(to right, #f953c6, #b91d73);
+  transform: scale(1.05);
+}
+
+textarea,
+input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.menu-link {
+  display: inline-block;
+  margin-top: 12px;
+  color: #2575fc;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.menu-link:hover {
+  text-decoration: underline;
+}
+
+.green {
+  color: #00b894;
+}
+
+.red {
+  color: #d63031;
+}
+
+@media (max-width: 768px) {
+  .mainDabba {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card-section,
+  .center-section,
+  .reviews-panel {
+    width: 100%;
+  }
+
+  .description-box,
+  .rules-box {
+    max-width: 100%;
+  }
+}
+</style>
+
+<%- include('../partials/nav') %>
+
+<!-- Your main HTML content stays unchanged -->
+<div class="mainDabba">
+  <div class="center-section">
+    <img src="<%= event.image %>" alt="image" class="event-img">
+
+    
+    <div class="ekaur">
+      <style>
+      .center-section .event-img {
+      display: block;
+      max-width: 100%;
+      max-height: 320px;
+      margin: 0 auto 24px auto;
+      border-radius: 14px;
+      box-shadow: 0 4px 18px rgba(108, 92, 231, 0.12);
+      object-fit: cover;
+      background: #f0f0ff;
+      }
+    </style>
+      <div class="info-line"><span class="label">Category:</span> <%= event.category %></div>
+    <div class="info-line"><span class="label">Location:</span> <%= event.location %></div>
+    <% if (event.dates && event.dates.length > 0) { %>
+      <div class="info-line">
+        <span class="label">📅 Schedules:</span>
+        <ul>
+          <% event.dates.forEach((date, index) => { %>
+            <li>
+              <%= new Date(date).toDateString() %>
+              <% if (event.times && event.times[index]) { %>
+                — <span><%= event.times[index] %></span>
+              <% } %>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+    <% } %>
+    <div class="info-line">
+      <span class="label">Ticket Price:</span> ₹<%= event.ticketPrice %>
+    </div>
+    <div class="info-line">
+      <span class="label">Rating:</span>
+      <span>
+        <% for (let i = 0; i < Math.round(averageRating); i++) { %>⭐<% } %>
+        (<%= averageRating %>/5)
+      </span>
+    </div>
+    <div class="info-line">
+      <span class="label">Total Bookings:</span>
+      <strong class="<%= numberOfOrders > 0 ? 'green' : 'red' %>">
+        <%= numberOfOrders || 0 %>
+      </strong>
+    </div>
+
+    <% if (event.bannerImage) { %>
+      <a href="<%= event.bannerImage.replace('/upload/', '/upload/fl_attachment/') %>" download class="menu-link">
+        📥 Download Brochure
+      </a>
+    <% } %>
+
+    
+  </div>
+  </div>
+  <div class="card-section">
+    <h2><%= event.title %></h2>
+    <div class="description-box">
+      <%= event.description %>
+    </div>
+    <div class="rules-box">
+      <%= event.rules %>
+    </div>
+    <% if (user && user.userType === 'attendee') { %>
+  <a href="/user/booking/<%= event._id %>">
+    <button class="btn">Book Event</button>
+  </a>
+<% } %>
+  </div>
+
+    
+
+  <div class="reviews-panel">
+    <h3 style="text-align:center; color:#6c5ce7;">📝 Event Reviews</h3>
+    <div class="review_list">
+      <% if (reviews && reviews.length > 0) { %>
+        <% reviews.forEach(review => { %>
+          <div class="review-item">
+            <p><strong><%= review.user.firstName || 'Anonymous' %> <%= review.user.lastName %>:</strong></p>
+            <p><%= review.comment %></p>
+            <p>Rating: <% for (let i = 0; i < review.rating; i++) { %>⭐<% } %> (<%= review.rating %>/5)</p>
+          </div>
+        <% }); %>
+      <% } else { %>
+        <p style="text-align:center; color:#555;">No reviews yet!</p>
+      <% } %>
+    </div>
+
+    <% let userReview = null; if (reviews && reviews.length > 0) {
+      userReview = reviews.find(review => review.user._id.toString() === user._id.toString());
+    } %>
+
+    <% if (userReview) { %>
+      <form action="/user/delete-review/<%= event._id %>" method="POST" style="margin-top: 10px; text-align: center;">
+        <input type="hidden" name="reviewId" value="<%= userReview._id %>" />
+        <button type="submit" class="add_btn" style="background-color: #e74c3c;">Delete Your Review</button>
+      </form>
+    <% } else { %>
+      <form action="/user/event-details/<%= event._id %>" method="POST" style="margin-top: 10px;">
+        <textarea name="Review" placeholder="Write your review here..." required style="width: 100%; padding: 8px;"></textarea>
+        <input type="number" name="Rating" placeholder="⭐ Rating (1-5)" min="1" max="5" required style="width: 100%; padding: 8px;">
+        <button type="submit" class="submit_btn" style="margin-top: 5px;">Submit</button>
+      </form>
+    <% } %>
+  </div>
+  <% if (event.organizer) { %>
+      <div class="organizer-box">
+        <h3 style="color: #d63384;">👑 Event Organizer</h3>
+        <div class="organizer-profile">
+          <img src="<%= event.organizer.profilePicture || '/user.jpeg' %>" class="organizer-img" />
+          <div class="organizer-info">
+            <p><strong><%= event.organizer.firstName %> <%= event.organizer.lastName %></strong></p>
+            <p><strong>Email:</strong> <%= event.organizer.email %></p>
+            <p><strong><%= event.organizer.userType %></strong></p>
+          </div>
+        </div>
+      </div>
+    <% } %>
+
+    <% if (event.attendees && event.attendees.length > 0) { %>
+      <div class="attendees-section">
+        <h3 style="color: #6c5ce7;">👥 Attendees</h3>
+        <div class="attendee-grid">
+          <% event.attendees.forEach(attendee => { %>
+            <div class="attendee-card">
+              <img src="<%= attendee.profilePicture || '/user.jpeg' %>" class="attendee-img" />
+              <p><%= attendee.firstName %> <%= attendee.lastName || '' %></p>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+</div>
+
+<%- include('../partials/loading') %>
+<%- include('../partials/footer') %>
+</body>
+</html>

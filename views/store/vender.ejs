@@ -1,0 +1,834 @@
+<%- include('../partials/head') %>
+<%- include('../partials/background') %>
+
+<style>
+
+    body {
+        font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        /* min-height: 100vh; */
+    }
+    /* --- Dropdown Styling --- */
+    #event-dropdown .dropdown-item, 
+    #location-dropdown .dropdown-item {
+        padding: 12px 20px;
+        cursor: pointer;
+        font-size: 1.05rem;
+        border-bottom: 1px solid #f5f5f5;
+        transition: background 0.2s, color 0.2s;
+        color: #333;
+        border-radius: 8px;
+    }
+
+    #event-dropdown .dropdown-item:hover,
+    #location-dropdown .dropdown-item:hover {
+        background: linear-gradient(90deg, #ffe5ec 60%, #fffbe6 100%);
+        color: #ff4d4f;
+    }
+
+    /* --- Search Bar Form Wrapper --- */
+    .search-bar-form {
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        gap: 18px;
+        max-width: 650px;
+        width: 95%;
+        margin: 32px auto 28px auto;
+        border-radius: 22px;
+        box-shadow: 0 4px 24px rgba(255, 77, 79, 0.08);
+        padding: 18px 28px;
+        position: relative;
+        z-index: 20;
+    }
+
+    /* --- Search Inputs --- */
+    .search-bar-form input[type="text"] {
+        flex: 1;
+        padding: 12px 18px;
+        border-radius: 14px;
+        border: 1.5px solid #ffd6d6;
+        font-size: 1.08rem;
+        outline: none;
+        transition: border 0.3s, box-shadow 0.3s;
+        box-shadow: 0 2px 8px rgba(255, 183, 197, 0.07);
+    }
+
+    .search-bar-form input[type="text"]:focus {
+        border-color: #ff4d4f;
+        box-shadow: 0 0 8px #ffd6d6;
+    }
+
+    /* --- Search Button --- */
+    #search-btn {
+        padding: 0;
+        margin-left: 8px;
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(90deg, #2f409e 60%, #376cea 100%);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 16px rgba(255, 77, 79, 0.13);
+        transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+    }
+
+    #search-btn:hover {
+        background: linear-gradient(90deg, #376cea 60%, #2f409e 100%);
+        transform: scale(1.08) rotate(-3deg);
+        box-shadow: 0 8px 32px rgba(255, 183, 197, 0.18);
+    }
+    #search-btn:active {
+        transform: scale(0.96);
+    }
+
+    /* --- Dropdown Container --- */
+    #event-dropdown, #location-dropdown {
+        position: absolute;
+        top: 48px;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1.5px solid #ffd6d6;
+        border-radius: 16px;
+        margin-top: 6px;
+        max-height: 220px;
+        min-width: 180px;
+        overflow-y: auto;
+        z-index: 99;
+        display: none;
+        box-shadow: 0 8px 32px rgba(255, 183, 197, 0.13);
+        animation: fadeInDown 0.4s;
+    }
+
+    /* --- Dropdown Items --- */
+    .dropdown-item {
+        padding: 12px 20px;
+        cursor: pointer;
+        font-size: 1.05rem;
+        border-bottom: 1px solid #f5f5f5;
+        transition: background 0.2s, color 0.2s;
+        color: #333;
+        border-radius: 8px;
+    }
+
+    .dropdown-item:last-child {
+        border-bottom: none;
+    }
+
+    .dropdown-item:hover {
+        background: linear-gradient(90deg, #ffe5ec 60%, #fffbe6 100%);
+        color: #ff4d4f;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 900px) {
+        .search-bar-form {
+            flex-direction: row;
+            gap: 14px;
+            min-width: 95vw;
+            padding: 14px 8px;
+        }
+        #search-btn {
+            width: 44px;
+            height: 44px;
+            font-size: 1.3rem;
+        }
+        #event-dropdown, #location-dropdown {
+            top: 44px;
+            min-width: 120px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .search-bar-form {
+            flex-direction: row;
+            gap: 10px;
+            /* max-width: vw; */
+            padding: 10px 2vw;
+        }
+        .search-bar-form input[type="text"] {
+            font-size: 1rem;
+            padding: 10px 10px;
+        }
+        #search-btn {
+            width: 40px;
+            height: 40px;
+            font-size: 1.1rem;
+        }
+        #event-dropdown, #location-dropdown {
+            top: 40px;
+            min-width: 90px;
+        }
+    }
+
+    .category-scroll {
+  display: flex;
+  overflow-x: scroll;
+  gap: 14px;
+  padding: 14px 20px;
+  max-width: 95%;
+  justify-content: center;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.category-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.category-scroll button {
+  flex: 0 0 auto;
+  width: 55px;
+  height: 55px;
+  background: #3b3b98;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-scroll button:hover {
+  background: #2e2e8c;
+  transform: scale(1.1);
+}
+.category-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+  padding: 16px 20px; /* ✅ Add side padding */
+  /* margin: 10px auto 30px; */
+  max-width: 95%;
+  justify-content: flex-start;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  scroll-padding-left: 20px; /* ✅ This ensures left edge spacing */
+}
+.category-scroll {
+    justify-content: center;
+}
+.category-scroll .category-item:first-child {
+    margin-left: 0;
+}
+.category-scroll .category-item:last-child {
+    margin-right: 0;
+}
+@media (max-width: 480px) {
+    .category-scroll {
+    justify-content:start;
+}
+}
+
+.category-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+
+.category-item {
+  flex: 0 0 auto;
+  width: 70px;
+  height: 70px;
+  background: #3b3b98;
+  color: white;
+  border-radius: 50%;
+  cursor: pointer;
+  text-align: center;
+  font-size: 24px;
+  transition: transform 0.3s ease, background 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.category-item:hover {
+  background: #2e2e8c;
+  transform: scale(1.05);
+}
+
+.category-item .label {
+  font-size: 10px;
+  font-weight: 500;
+  margin-top: 2px;
+  color: #fff;
+}
+
+    h1 {
+        text-align: center;
+        margin-top: 40px;
+        color: #ff4d4f;
+        font-size: 40px;
+        letter-spacing: 2px;
+        font-weight: 700;
+        /* text-shadow: 0 2px 8px #ffd6d6; */
+        animation: fadeInDown 0.8s ease forwards;
+    }
+
+    .cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 32px;
+        padding: 18px 10px 0 10px;
+        max-height: 135vh;
+        overflow: hidden;
+    }
+
+    .card {
+        background: linear-gradient(135deg, #fff 60%, #fff0f6 100%);
+        border-radius: 22px;
+        box-shadow: 0 8px 32px rgba(255, 77, 79, 0.09), 0 2px 8px rgba(255, 77, 79, 0.08);
+        overflow: hidden;
+        width: 300px;
+        transition: transform 0.3s, box-shadow 0.3s;
+        border: 2px solid #ffe5e5;
+        position: relative;
+    }
+
+    .card:hover {
+        transform: translateY(-10px) scale(1.03);
+        box-shadow: 0 16px 40px rgba(255, 77, 79, 0.18);
+    }
+
+    .card img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-top-left-radius: 22px;
+        border-top-right-radius: 22px;
+        transition: transform 0.4s, filter 0.4s;
+    }
+
+    .card img:hover {
+        transform: scale(1.08);
+        filter: brightness(1.1) saturate(1.2);
+    }
+
+    .content {
+        padding: 8px 8px 6px 8px;
+    }
+
+    .card h3 {
+        margin: 10px 0 6px;
+        color: #2c3e50;
+        font-size: 22px;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+
+    .card p {
+        margin: 4px 0;
+        color: #555;
+        font-size: 15px;
+        text-align: left;
+    }
+
+    .reserve {
+        background: linear-gradient(90deg, #3b3b98 60%, #4949be 100%);
+        color: white;
+        border: none;
+        border-radius: 30px;
+        padding: 11px 22px;
+        margin-top: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+        box-shadow: 0 4px 16px rgba(255, 77, 79, 0.18);
+        letter-spacing: 1px;
+    }
+
+    .reserve:hover {
+        background: linear-gradient(90deg, #4949be 100%, #3b3b98 60%);
+        transform: scale(1.07);
+        box-shadow: 0 8px 24px rgba(255, 77, 79, 0.22);
+    }
+
+    .fav-btn {
+        position: absolute;
+        right: 5%;
+        z-index: 2;
+    }
+
+    .fav-btn img {
+        width: 28px;
+        height: 28px;
+        transition: all 0.3s;
+        border-radius: 50%;
+        background: #ffffff00;
+        padding: 2px;
+    }
+
+    #favImg1 {
+        filter: grayscale(1);
+    }
+
+    #favImg1:hover {
+        transform: scale(1.2) rotate(10deg);
+        filter: brightness(1.0);
+    }
+
+    #favImg2:hover {
+        transform: scale(1.2) rotate(-10deg);
+        filter: grayscale(1);
+    }
+
+    h2 {
+        text-align: center;
+        color: #0c36db;
+        margin-top: 48px;
+        font-size: 150%;
+        font-weight: 700;
+        letter-spacing: 1px;
+        /* text-shadow: 0 2px 8px #ffd6d6; */
+    }
+
+    h3, p {
+
+        /* text-shadow: 0 2px 8px #ffd6d6; */
+        text-align: center;
+        padding: 0 15px;
+        /* text-shadow: #ffe5ec 0px 2px 8px; */
+    }
+
+    .promo-image-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 48px 0 32px 0;
+    }
+
+    .promo-image {
+        max-width: 90vw;
+        width: 500px;
+        height: auto;
+        border-radius: 26px;
+        box-shadow: 0 10px 32px rgba(255, 77, 79, 0.13), 0 2px 8px rgba(255, 183, 197, 0.13);
+        transition: transform 0.4s cubic-bezier(.4,2,.3,1), box-shadow 0.4s;
+        object-fit: cover;
+    }
+
+    .promo-image:hover {
+        transform: scale(1.04) rotate(-1deg);
+        box-shadow: 0 16px 48px rgba(255, 183, 197, 0.22), 0 4px 16px rgba(255, 77, 79, 0.13);
+        filter: brightness(1.08) saturate(1.1);
+    }
+
+    /* --- OFFERS SECTION --- */
+    .offers-section {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 28px;
+        margin: 36px 0 0 0;
+    }
+
+    .offer-card {
+        background: linear-gradient(120deg, #fffbe6 60%, #ffe5ec 100%);
+        border-radius: 18px;
+        box-shadow: 0 6px 24px rgba(255, 183, 197, 0.13);
+        width: 320px;
+        padding: 28px 22px 22px 22px;
+        margin: 0 0 16px 0;
+        border: 2px solid #2368d7;
+        position: relative;
+        transition: transform 0.3s, box-shadow 0.3s;
+        text-align: left;
+    }
+
+    .offer-card:hover {
+        transform: translateY(-6px) scale(1.03);
+        box-shadow: 0 12px 32px rgba(255, 183, 197, 0.22);
+        border-color: #2368d7;
+    }
+
+    .offer-card h3 {
+        color: #3a1ba9;
+        font-size: 20px;
+        margin-bottom: 10px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-align: left;
+        text-shadow: 0 2px 8px #ffd6d6;
+    }
+
+    .offer-card p {
+        color: #444;
+        font-size: 15px;
+        margin-bottom: 0;
+        text-align: left;
+    }
+
+    .offer-badge {
+        position: absolute;
+        top: -18px;
+        left: 18px;
+        background: linear-gradient(90deg, #2368d7 60%, #10479f 100%);
+        color: #fff;
+        font-size: 13px;
+        font-weight: 700;
+        padding: 6px 18px;
+        border-radius: 16px;
+        box-shadow: 0 2px 8px #ffd6d6;
+        letter-spacing: 1px;
+    }
+
+    /* --- Birthday & Delivery Offers --- */
+    .special-offer {
+        background: linear-gradient(90deg, #fffbe6 60%, #ffe5ec 100%);
+        border-radius: 18px;
+        box-shadow: 0 6px 24px rgba(255, 183, 197, 0.13);
+        width: 90%;
+        max-width: 700px;
+        margin: 24px auto 0 auto;
+        padding: 28px 22px 22px 22px;
+        border: 2px solid #ffb347;
+        text-align: center;
+        font-size: 17px;
+        color: #ff4d4f;
+        font-weight: 600;
+        position: relative;
+    }
+
+    .special-offer strong {
+        color: #ff4d4f;
+    }
+
+    .special-offer .emoji {
+        font-size: 28px;
+        vertical-align: middle;
+        margin-right: 6px;
+    }
+
+    /* Remove underlines from all links inside .card */
+    .card a {
+        text-decoration: none !important;
+        color: inherit;
+    }
+
+    /* Remove underline from RESERVE button link */
+    .card .reserve {
+        text-decoration: none !important;
+    }
+
+    
+
+    @media (max-width: 900px) {
+        .cards-container, .offers-section {
+            flex-direction: row;
+            align-items: center;
+            gap: 18px;
+        }
+        .card, .offer-card {
+            width: 90%;
+            min-width: 0;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .card, .offer-card, .special-offer {
+            width: 90%;
+            padding: 16px 8px 12px 8px;
+        }
+        .promo-image {
+            width: 98vw;
+        }
+    }
+    .cards-container{
+        max-height: 438vh;
+    }
+
+    @keyframes fadeInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<%- include('../partials/nav') %>
+
+<form action="/" class="search-bar-form" method="get" style="display: flex; gap: 22px; flex-wrap: wrap;">
+  
+  <!-- 🔍 Event Search -->
+  <div style="position: relative; flex: 1;">
+    <input
+      type="text"
+      name="event"
+      placeholder="🔍 Search Categories..."
+      id="event-search"
+      autocomplete="off"
+      value="<%= typeof searchQuery !== 'undefined' ? searchQuery : '' %>"
+      oninput="filterDropdown('event')"
+      onfocus="showDropdown('event')"
+      style="width: 100%; padding: 10px; border: 1px solid #ccc;  border-top-right-radius: 0px ;border-bottom-right-radius: 0px;"
+    />
+
+    <!-- 🔽 Event Dropdown -->
+    <div id="event-dropdown"
+      style="position: absolute; top: 42px; left: 0; right: 0; z-index: 10; background: white; border: 1px solid #ccc; display: none;">
+      <% availableEvents.forEach(evt => { %>
+        <div class="dropdown-item event-item" onclick="selectDropdownValue('event', '<%= evt %>')" style="padding: 8px 14px; cursor: pointer;">
+          <%= evt %>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <!-- 📍 Location Search -->
+  <div style="position: relative; flex: 1;">
+    <input
+      type="text"
+      name="location"
+      placeholder="📍 Location"
+      id="location-search"
+      autocomplete="off"
+      value="<%= typeof searchLocation !== 'undefined' ? searchLocation : '' %>"
+      oninput="filterDropdown('location')"
+      onfocus="showDropdown('location')"
+      style="width: 100%; padding: 10px; border: 1px solid #ccc; border-top-left-radius: 0px ;border-bottom-left-radius: 0px;"
+    />
+
+    <!-- 🔽 Location Dropdown -->
+    <div id="location-dropdown"
+      style="position: absolute; top: 42px; left: 0; right: 0; z-index: 10; background: white; border: 1px solid #ccc; display: none;">
+      <% availableLocations.forEach(loc => { %>
+        <div class="dropdown-item location-item" onclick="selectDropdownValue('location', '<%= loc %>')" style="padding: 8px 14px; cursor: pointer;">
+          <%= loc %>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <!-- 🔎 Search Button -->
+  <button type="submit" id="search-btn"
+    style="padding: 10px 18px; color: white; border: none; cursor: pointer;">
+    🔍
+  </button>
+</form>
+<div class="category-scroll">
+  <div class="category-item" onclick="filterByCategory('Music')">
+    <span class="emoji">🎵</span>
+    <span class="label">Music</span>
+  </div>
+  <div class="category-item" onclick="filterByCategory('Tech')">
+    <span class="emoji">💻</span>
+    <span class="label">Tech</span>
+  </div>
+  <div class="category-item" onclick="filterByCategory('Business')">
+    <span class="emoji">📊</span>
+    <span class="label">Business</span>
+  </div>
+  <div class="category-item" onclick="filterByCategory('Education')">
+    <span class="emoji">📚</span>
+    <span class="label">Education</span>
+  </div>
+  <div class="category-item" onclick="filterByCategory('Health')">
+    <span class="emoji">💖</span>
+    <span class="label">Health</span>
+  </div>
+  <div class="category-item" onclick="filterByCategory('Sports')">
+    <span class="emoji">🏆</span>
+    <span class="label">Sports</span>
+  </div>
+  <div class="category-item" onclick="filterByCategory('Other')">
+    <span class="emoji">✨</span>
+    <span class="label">Other</span>
+  </div>
+</div>
+
+<div class="mainDabba">
+  <div class="cards-container">
+    <%if (events.length === 0) { %>
+      <p style="text-align:center; margin-top: 40px; font-size: 18px; color: #888;">
+        No events found
+        <% if (searchQuery && searchQuery.trim() !== '' ) { %>
+          for "<%= searchQuery %>"
+        <% } %>.
+      </p>
+    <% } else { %>
+    <div class="cards-container">
+        <% events.forEach(event=> { %>
+                <div class="card">
+                    <a href="/user/event-details/<%= event._id %>">
+                        <img src="<%= event.image %>" alt="Event Image">
+                        <div class="content">
+                            <h3>
+                                <%= event.title %>
+                            </h3>
+                            <p><strong>Category:</strong>
+                                <%= event.category %>
+                            </p>
+                            <p><strong>Ticket Price:</strong> ₹<%= event.ticketPrice %>
+                            </p>
+                            <p><strong>Location:</strong>
+                                <%= event.location %>
+                            </p>
+                            <p><strong>📅 Dates:</strong>
+                                <%= event.formattedDates?.join(', ') %>
+                            </p>
+                            <p><strong>Ratings:</strong>
+                                <% for (let i=1; i <=Math.round(event.averageRating); i++) { %>⭐<% } %>
+                                        (<%= event.averageRating %>/5)
+                            </p>
+    
+                            <% if (showOptions) { %>
+                                <form action="/user/favourite_list" method="post" class="fav-btn">
+                                    <input type="hidden" name="eventId" value="<%= event._id %>">
+                                    <% if(opacity[event._id]==10) { %>
+                                        <button onclick="loading()" type="submit" style="background: none; border: none;">
+                                            <img id="favImg2" src="/pngtree-red-3d-heart-emoji-realistic-shadow-png-image_4539964.png"
+                                                alt="Favourite">
+                                        </button>
+                                        <% } else { %>
+                                            <button onclick="loading()" type="submit"
+                                                style="background: none; border: none;">
+                                                <img id="favImg1" src="/pngtree-red-3d-heart-emoji-realistic-shadow-png-image_4539964.png"
+                                                    alt="Favourite">
+                                            </button>
+                                            <% } %>
+                                </form>
+                                <% } %>
+    
+                                    <% if (showOptions) { %>
+                                        <a href="/user/booking/<%= event._id %>">
+                                            <button class="reserve">BOOK NOW</button>
+                                        </a>
+                                        <% } else if (!isLogedIn) { %>
+                                            <a href="/logIn">
+                                                <button class="reserve">BOOK NOW</button>
+                                            </a>
+                                        <% } %>
+                        </div>
+                    </a>
+                </div>
+        <% }) %>
+    </div>
+    <% } %>
+  </div>
+
+  <br><br>
+
+  <div class="promo-image-container">
+    <img src="/home.jpeg" alt="Promotional" class="promo-image">
+  </div>
+
+  <h2>Why Choose Us?</h2>
+  <h3 class="special-offer" style="min-width: 90%;">
+    🎉 EventBookingHub is your modern, multi-organizer platform for discovering and booking incredible events across your city! Whether it's workshops, concerts, conferences, or college fests—our secure dashboard 🔐, seamless uploads 📄, and fast experience ensure you never miss out.<br><br>
+    Powered by the robust MERN stack ⚙️ (MongoDB, Express.js, React.js, Node.js), EventBookingHub blends technology and creativity into one interactive experience. Discover events, check ratings, download brochures, and book instantly—without friction 🚀🎫.
+  </h3>
+
+  <h2>LIMITED-TIME OFFERS!</h2>
+  <p style="color: #ed1765;">
+    Unlock exclusive perks while booking your favorite events.
+  </p>
+
+  <div class="offers-section">
+    <div class="offer-card">
+      <div class="offer-badge">🎫 No Show?</div>
+      <h3>Ticket rollover!</h3>
+      <p>Can’t attend your booked event? Rollover your ticket to another upcoming event (once per user).</p>
+    </div>
+
+    <div class="offer-card">
+      <div class="offer-badge">🎉 Group Bookings</div>
+      <h3>Up to 30% Off</h3>
+      <p>Book with 3 or more friends and unlock big discounts!</p>
+    </div>
+  </div>
+
+  <div class="special-offer">
+    <span class="emoji">🎂</span> <strong>Birthday Reward!</strong><br>
+    Book any event on your birthday and receive a special voucher or backstage pass!<br>
+    <strong>Note:</strong> Must be logged in to claim.
+  </div>
+
+  <div class="special-offer">
+    <span class="emoji">🚚</span> <strong>Zero Convenience Fee!</strong><br>
+    No extra booking charges—just pay for your event.<br>
+    <strong>Note:</strong> Valid for all users till July 31st.
+  </div>
+
+</div>
+
+<%- include('../partials/loading') %>
+<%- include('../partials/footer') %>
+<script>
+    function selectDropdownValue(type, value) {
+  const input = document.getElementById(`${type}-search`);
+  input.value = value;
+
+  const dropdown = document.getElementById(`${type}-dropdown`);
+  dropdown.style.display = 'none';
+}
+  function showDropdown(type) {
+  const dropdown = document.getElementById(`${type}-dropdown`);
+  const items = dropdown.querySelectorAll(`.${type}-item`);
+  dropdown.style.display = 'block';
+
+  // Show all initially
+  items.forEach(item => item.style.display = 'block');
+}
+
+function filterDropdown(type) {
+  const input = document.getElementById(`${type}-search`);
+  const query = input.value.toLowerCase();
+  const dropdown = document.getElementById(`${type}-dropdown`);
+  const items = dropdown.querySelectorAll(`.${type}-item`);
+
+  if (query.length < 1) {
+    dropdown.style.display = 'none';
+    return;
+  }
+
+  let visible = false;
+  items.forEach(item => {
+    const match = item.textContent.toLowerCase().includes(query);
+    item.style.display = match ? 'block' : 'none';
+    if (match) visible = true;
+  });
+
+  dropdown.style.display = visible ? 'block' : 'none';
+}
+  function showDropdown(type) {
+    const input = document.getElementById(`${type}-search`);
+    const dropdown = document.getElementById(`${type}-dropdown`);
+    if (input.value.length >= 1) {
+      dropdown.style.display = 'block';
+    }
+  }
+
+  // 🔽 Hide both dropdowns when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-bar-form')) {
+      document.getElementById('event-dropdown').style.display = 'none';
+      document.getElementById('location-dropdown').style.display = 'none';
+    }
+  });
+</script>
+
+<script>
+  function filterByCategory(category) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('event', category);
+    window.location.href = url.toString();
+  }
+</script>
+</body>
+</html>

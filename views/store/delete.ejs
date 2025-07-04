@@ -1,0 +1,154 @@
+<%-include('../partials/head')%>
+<style>
+  .form-container {
+    background: linear-gradient(135deg, #e1f0fb, #f0f8ff);
+    padding: 2.5rem;
+    border-radius: 2rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    width: 350px;
+    margin: 30px auto;
+    border: 1px solid #cce7f9;
+    position: relative;
+  }
+
+  .form-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #1c3e57;
+    font-family: 'Georgia', serif;
+    font-size: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .input-group {
+    position: relative;
+    margin-bottom: 2rem;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 14px 12px;
+    border: 2px solid #4f83a4;
+    border-radius: 1rem;
+    outline: none;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background: #f0f8ff;
+  }
+
+  .input-group input:focus {
+    border-color: #3b5f73;
+    box-shadow: 0 0 10px rgba(79, 131, 164, 0.5);
+    background: #ffffff;
+  }
+
+  .input-group label {
+    position: absolute;
+    top: 50%;
+    left: 14px;
+    transform: translateY(-50%);
+    color: #6fa8dc;
+    font-size: 1rem;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    background: #f0f8ff;
+    padding: 0 6px;
+    border-radius: 0.25rem;
+  }
+
+  .input-group input:focus + label,
+  .input-group input:valid + label {
+    top: -12px;
+    font-size: 0.8rem;
+    color: #1c3e57;
+    background: #ffffff;
+  }
+
+  .form-container button {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #4f83a4, #3b5f73);
+    color: #fff;
+    border: none;
+    border-radius: 1rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+    font-family: 'Georgia', serif;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .form-container button:hover {
+    background: linear-gradient(135deg, #3b5f73, #4f83a4);
+    transform: scale(1.05);
+  }
+
+  .back-btn {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #4f83a4;
+    color: #4f83a4;
+    background: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 1rem;
+    text-align: center;
+    text-decoration: none;
+    transition: background 0.3s ease, color 0.3s ease, transform 0.2s ease;
+    font-family: 'Georgia', serif;
+  }
+
+  .back-btn:hover {
+    background: #4f83a4;
+    color: white;
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    .form-container {
+      width: 70%;
+      margin: 5.5%;
+      padding: 2rem;
+    }
+
+    .form-container h2 {
+      font-size: 1.5rem;
+    }
+
+    .form-container button {
+      font-size: 1rem;
+    }
+
+    .back-btn {
+      font-size: 0.95rem;
+    }
+  }
+</style>
+
+<body>
+  <div class="form-container">
+    <h2>❌ Delete Account</h2>
+    <form action="/delete_user" method="POST">
+      <%- include('../partials/errorHandel') %>
+      <div class="input-group">
+        <input type="email" id="email" name="email" required value="<%= user.email ? user.email : '' %>">
+        <label for="email">Email</label>
+      </div>
+      <div class="input-group">
+        <input type="password" id="password" name="password" required />
+        <label for="password">Password</label>
+      </div>
+      <button type="submit" onclick="loading()">Delete</button>
+    </form>
+
+    <!-- 🔵 Back to Home Button -->
+    <a href="/" class="back-btn">⬅️ Back to Home</a>
+  </div>
+
+  <%- include('../partials/loading') %>
+  <%- include('../partials/footer') %>
+</body>
+</html>

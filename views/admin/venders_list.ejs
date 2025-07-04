@@ -1,0 +1,234 @@
+<%-include('../partials/head')%>
+<%-include('../partials/background')%>
+<style>
+  body {
+    background: linear-gradient(to bottom, #e3f2fd, #bbdefb);
+    color: #2c3e50;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+  header, nav {
+    margin-bottom: 2rem;
+  }
+
+  h1, h2 {
+    text-align: center;
+    margin-bottom: 10px;
+    color: #2368d7;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.08);
+  }
+
+  .top-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0 2rem;
+    margin-bottom: 1rem;
+  }
+
+  #addEvents {
+    background: linear-gradient(90deg, #2368d7 0%, #478afc 100%);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(35, 104, 215, 0.2);
+    transition: all 0.3s ease-in-out;
+  }
+
+  #addEvents:hover {
+    background: linear-gradient(90deg, #478afc 0%, #2368d7 100%);
+    transform: scale(1.06);
+    box-shadow: 0 6px 14px rgba(35, 104, 215, 0.25);
+  }
+
+  .cards-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  .card {
+    background: linear-gradient(135deg, #ffffff 60%, #e3f2fd 100%);
+    border-radius: 18px;
+    box-shadow: 0 4px 18px rgba(35, 104, 215, 0.1);
+    width: 280px;
+    padding: 1rem;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 24px rgba(35, 104, 215, 0.2);
+  }
+
+  .card img {
+    width: 100%;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    margin-top: 20px;
+    transition: transform 0.3s ease;
+  }
+
+  .card:hover img {
+    transform: scale(1.05);
+  }
+
+  .card h3 {
+    margin: 5px 0;
+    font-size: 1.3rem;
+    color: #2368d7;
+    font-weight: 600;
+  }
+
+  .card p {
+    margin: 4px 0;
+    font-size: 0.95rem;
+    color: #444;
+  }
+
+  .card form,
+  .card a {
+    display: inline-block;
+    margin-right: 6px;
+  }
+
+  .card button {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .card button:hover {
+    transform: scale(1.2);
+  }
+
+  .description-scroll {
+    height: 40px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .card p strong {
+    color: #2c3e50;
+  }
+
+  .card p .stars {
+    color: #ffcc00;
+    font-size: 1.1rem;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .img1, .img2, .img3, .img4 {
+    position: absolute;
+    width: 25vw;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    z-index: -1;
+    transition: transform 0.3s ease;
+  }
+
+  .img1 {
+    top: 15%;
+    left: 2.5%;
+    border-radius: 42% 58% 65% 35% / 40% 30% 70% 60%;
+  }
+
+  .img2 {
+    top: 40%;
+    right: 2.5%;
+    border-radius: 100% 50% 100% 50% / 60% 40% 60% 40%;
+  }
+
+  .img3 {
+    top: 95%;
+    left: 2.5%;
+    border-radius: 50% 100% 50% 100% / 40% 60% 40% 60%;
+  }
+
+  .img4 {
+    bottom: -90%;
+    right: 2.5%;
+    border-radius: 50% 100% 50% 100% / 40% 60% 40% 60%;
+  }
+
+  .mainDabba {
+    margin-bottom: 15%;
+  }
+</style>
+
+<%-include('../partials/nav')%>
+
+<div class="mainDabba">
+  <div class="top-bar">
+    <a href="/vender/add-event">
+      <button id="addEvents">🎉 Add New Event</button>
+    </a>
+  </div>
+
+
+  <div class="cards-container">
+  <% events.forEach(event => { %>
+    <div class="card">
+      <div style="position: absolute; top: 10px; right: 10px;">
+        <a href="/vender/edit-event/<%= event._id %>?editing=true" title="Edit">
+          <button type="button">✍️</button>
+        </a>
+        <form action="/vender/delete-event/<%= event._id %>" method="post" style="display:inline;">
+          <input type="hidden" name="id" value="<%= event._id %>">
+          <button type="submit" title="Delete">🗑️</button>
+        </form>
+      </div>
+
+      <img src="<%= event.image %>" alt="Event Image">
+
+      <h3><%= event.title %></h3>
+
+      <p><strong>🎟️ Ticket Price:</strong> ₹<%= event.ticketPrice %></p>
+      <p><strong>📍 Location:</strong> <%= event.location %></p>
+
+      <!-- 📅 Show formatted dates -->
+      <p><strong>📅 Dates:</strong>
+        <%= event.formattedDates?.join(', ') || 'N/A' %>
+      </p>
+
+
+      <p><strong>⭐ Ratings:</strong>
+        <span class="stars">
+          <% for (let i = 1; i <= Math.floor(event.averageRating); i++) { %>⭐<% } %>
+          (<%= event.averageRating %>/5)
+        </span>
+      </p>
+
+      <p class="description-scroll">
+        <strong>📝 Description:</strong> <%= event.description %>
+      </p>
+    </div>
+  <% }) %>
+</div>
+
+<%- include('../partials/footer') %>
+</body>
+</html>

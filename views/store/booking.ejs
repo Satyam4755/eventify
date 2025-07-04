@@ -1,0 +1,436 @@
+<%- include('../partials/head') %>
+<%- include('../partials/background') %>
+<style>
+.radio-option.selected {
+  border: 2px solid #2f80ed;
+  background-color: #e3f2fd;
+  color: #2f80ed;
+  font-weight: bold;
+}
+.radio-option {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 12px;
+  border: 2px solid #90caf9;
+  border-radius: 8px;
+  cursor: pointer;
+  min-width: 100px;
+  text-align: center;
+  transition: 0.2s ease;
+  font-size: 14px;
+  position: relative;
+}
+.radio-option input[type="radio"] {
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+}
+.radio-option.selected {
+  background-color: #2f80ed;
+  color: white;
+  border-color: #2f80ed;
+}
+
+.headings {
+  margin: 10px auto 20px auto;
+  text-align: center;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  padding: 20px 25px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 40%;
+  max-height: 7%;
+}
+.headings h1 {
+  font-size: 2em;
+  color: #1565c0;
+  margin: 0;
+}
+.headings h2 {
+  font-size: 1.2em;
+  color: #607d8b;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+.mainDabba {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 30px;
+  padding: 20px;
+  max-width: 100%;
+  margin: 0 auto 60px auto;
+  animation: fadeIn 1s ease;
+}
+.cards-container,
+.booking-cards-container {
+  flex: 1 1 320px;
+  max-width: 420px;
+}
+.card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(33, 150, 243, 0.1);
+  transition: transform 0.4s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 28px rgba(25, 118, 210, 0.18);
+}
+.card img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+.card:hover img {
+  transform: scale(1.05);
+}
+.content {
+  padding: 15px;
+}
+.content h3 {
+  color: #1976d2;
+  margin-bottom: 8px;
+  font-size: 1.3em;
+}
+.content p {
+  margin: 5px 0;
+  color: #455a64;
+  font-size: 0.95em;
+}
+.img1, .img2 {
+  position: absolute;
+  width: 25vw;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  z-index: -1;
+}
+.img1 {
+  top: 15%;
+  right: 2.5%;
+  border-radius: 42% 58% 65% 35% / 40% 30% 70% 60%;
+}
+.img2 {
+  top: 40%;
+  left: 2.5%;
+  border-radius: 100% 50% 100% 50% / 60% 40% 60% 40%;
+}
+
+form {
+  background: rgba(255, 255, 255, 0.97);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 6px 20px rgba(21, 101, 192, 0.1);
+  animation: fadeInUp 1s ease;
+}
+form h2 {
+  text-align: center;
+  color: #1565c0;
+  margin-bottom: 20px;
+  font-size: 1.4em;
+}
+label {
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+}
+input, select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 14px;
+  border: 1px solid #90caf9;
+  border-radius: 10px;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+  font-size: 0.95em;
+}
+input:focus, select:focus {
+  border-color: #1565c0;
+  outline: none;
+}
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: #1976d2;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+button:hover {
+  background-color: #1565c0;
+  transform: scale(1.05);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .mainDabba {
+    flex-direction: row;
+    padding: 15px;
+  }
+  form {
+    width: 87%;
+    padding: 20px;
+  }
+  input, select {
+    width: 90%;
+  }
+  .headings {
+    padding: 15px 20px;
+  }
+  .cards-container, .booking-cards-container {
+    max-width: 100%;
+  }
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Custom Radio Tiles */
+.radio-tile-group {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.radio-tile {
+  flex: 1 1 45%;
+  background: #ffffff;
+  border: 2px solid #ccc;
+  border-radius: 12px;
+  padding: 14px 18px;
+  text-align: center;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s ease;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+}
+.radio-tile:hover {
+  border-color: #1976d2;
+  box-shadow: 0 6px 14px rgba(25, 118, 210, 0.1);
+}
+.radio-tile input[type="radio"] {
+  display: none;
+}
+.radio-tile.selected {
+  border-color: #1976d2;
+  background-color: #e3f2fd;
+  color: #0d47a1;
+  box-shadow: 0 6px 16px rgba(21, 101, 192, 0.15);
+}
+
+.month-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 15px 0;
+}
+.month-btn {
+  padding: 10px;
+  border-radius: 8px;
+  background-color: #f0f4ff;
+  border: 2px solid transparent;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.month-btn:hover {
+  background-color: #e3f2fd;
+  border-color: #1976d2;
+}
+.month-btn.selected {
+  background-color: #e3f2fd;
+  border-color: #1976d2;
+  color: #0d47a1;
+}
+
+.badaDabba {
+  margin-bottom: 15%;
+}
+</style>
+
+<%- include('../partials/nav') %>
+
+<div class="badaDabba">
+  <div class="mainDabba">
+    <div class="cards-container">
+      <div class="card">
+        <a id="link" href="/user/event-details/<%= event._id %>" style="text-decoration: none; color: black;">
+          <img src="<%= event.image %>" alt="Event Image">
+          <div class="content">
+            <h3><%= event.title %></h3>
+            <p><strong>🎟️ Ticket Price:</strong> ₹<%= event.ticketPrice %></p>
+            <p><strong>📍 Location:</strong> <%= event.location %></p>
+            <p><strong>⏰ Category:</strong> <%= event.category %></p>
+            <p><strong>⭐ Ratings:</strong>
+              <% const fullStars = Math.floor(event.averageRating || 0); %>
+              <% for(let i = 0; i < fullStars; i++) { %> ⭐ <% } %>
+              <span style="margin-left: 5px; font-weight: 700; color: red;">
+                (<%= event.averageRating || 0 %>/5)
+              </span>
+            </p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <div class="booking-cards-container">
+  <form action="/user/submit_booking/<%= event._id %>" method="post">
+    <%- include('../partials/errorHandel') %>
+    <h2>Event Booking</h2>
+
+    <input type="hidden" name="eventId" value="<%= event._id %>">
+
+    <label for="name">Full Name</label>
+    <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+
+    <label for="phone">Phone Number</label>
+    <input type="tel" id="phone" name="phone" placeholder="Enter your phone number (10 digits)" pattern="[0-9]{10}" required>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+    <label for="numberOfTickets">Number of Tickets</label>
+    <input type="number" id="numberOfTickets" name="numberOfTickets" value="1" min="1" required>
+
+    <!-- 👇 Date Selection -->
+<label><strong>Select Your Preferred Date</strong></label>
+<div class="date-radio-container" style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 10px;">
+  <% if (event.dates && event.dates.length > 0) { %>
+    <% event.dates.forEach((date, index) => { 
+         const formattedDate = new Date(date).toDateString();
+         const isoDate = new Date(date).toISOString().split('T')[0];
+    %>
+      <label class="radio-option" data-index="<%= index %>" data-date="<%= isoDate %>">
+        <input 
+          type="radio" 
+          name="dateSelector" 
+          style="display: none;" 
+          required
+        >
+        <div><%= formattedDate %></div>
+      </label>
+    <% }) %>
+  <% } %>
+</div>
+
+<!-- 👇 Hidden Inputs -->
+<input type="hidden" id="bookingDate" name="eventDate" required>
+<input type="hidden" id="bookingTime" name="eventTime" required>
+
+<!-- 👇 Display selected time -->
+<p id="visibleTimeBox" style="font-weight: bold; color: #6c5ce7; margin-bottom: 12px;"></p>
+
+<!-- 👇 Embedded Times -->
+<script id="timesJson" type="application/json">
+  <%- JSON.stringify(event.times || []) %>
+</script>
+
+<!-- 👇 Script to handle selection logic -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const allTimes = JSON.parse(document.getElementById('timesJson').textContent);
+
+    const labels = document.querySelectorAll('.radio-option');
+    const hiddenDateInput = document.getElementById('bookingDate');
+    const hiddenTimeInput = document.getElementById('bookingTime');
+    const visibleTimeBox = document.getElementById('visibleTimeBox');
+
+    labels.forEach(label => {
+      label.addEventListener('click', () => {
+        // Remove previously selected
+        labels.forEach(lbl => lbl.classList.remove('selected'));
+
+        const index = parseInt(label.getAttribute('data-index'));
+        const selectedDate = label.getAttribute('data-date');
+        const matchedTime = allTimes[index] || '';
+
+        hiddenDateInput.value = selectedDate;
+        hiddenTimeInput.value = matchedTime;
+        visibleTimeBox.textContent = matchedTime 
+          ? `⏰ Time: ${matchedTime}` 
+          : 'No time available for this date';
+
+        label.classList.add('selected');
+        label.querySelector('input[type="radio"]').checked = true;
+      });
+    });
+  });
+</script>
+
+ 
+    <label for="payment">Payment Method</label>
+    <select id="payment" name="payment" required>
+      <option value="">Select Payment Method</option>
+      <option value="credit_card">Credit Card</option>
+      <option value="debit_card">Debit Card</option>
+      <option value="paypal">PayPal</option>
+      <option value="cash">Cash</option>
+    </select>
+
+    <input type="hidden" name="ticketPrice" id="ticketPrice" value="<%= event.ticketPrice %>">
+    <input type="hidden" name="totalAmount" id="totalAmountInput" value="<%= event.ticketPrice %>">
+
+    <h3 style="color: #d6336c; text-align: center;">
+      Total Amount: ₹<span id="totalAmount"><%= event.ticketPrice %></span>
+    </h3>
+
+    <button class="submit" type="submit" onclick="loading()">Book Now</button>
+
+    <script>
+      const form = document.querySelector('form');
+
+      form.addEventListener('submit', function (e) {
+        const selectedDate = document.getElementById('bookingDate').value;
+        const selectedTime = document.getElementById('bookingTime').value;
+
+        if (!selectedDate || !selectedTime) {
+          e.preventDefault();
+          alert("⚠️ Please select a date before submitting the form.");
+        }
+      });
+    </script>
+  </form>
+</div>
+  </div>
+</div>
+
+<script>
+  const totalElement = document.getElementById('totalAmount');
+  const ticketInput = document.getElementById('numberOfTickets');
+  const ticketPrice = Number(document.getElementById('ticketPrice').value);
+  const totalAmountInput = document.getElementById('totalAmountInput');
+
+  ticketInput.addEventListener('input', () => {
+    const qty = Number(ticketInput.value);
+    const total = qty * ticketPrice;
+    totalElement.textContent = total;
+    totalAmountInput.value = total;
+  });
+</script>
+
+<%- include('../partials/loading') %>
+<%- include('../partials/footer') %>
+</body>
+</html>
