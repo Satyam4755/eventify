@@ -70,7 +70,7 @@ exports.postSignUpPage = [
 
   check('email')
     .isEmail().withMessage("Email should be in email format")
-    .normalizeEmail(),
+    .normalizeEmail({ gmail_remove_dots: false }),
 
   check('password')
     .isLength({ min: 6 }).withMessage("The password must be at least 6 characters")
