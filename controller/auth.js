@@ -290,8 +290,26 @@ exports.deleteUser = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ email });
+    if (!req.session.user) {
+      return res.status(401).send("Session expired. Please log in again.");
+    }
+
+    const userId = req.session.user._id;
+
+    // ✅ Always find user by session ID
+    const user = await User.findById(userId);
     if (!user) return res.status(404).send('User not found');
+
+    // ✅ Ensure email matches to prevent accidental delete
+    if (user.email !== email) {
+      return res.status(401).render('./store/delete', {
+        title: "Delete Page",
+        isLogedIn: false,
+        errorMessage: ['Email does not match logged-in account'],
+        oldInput: { email },
+        user: req.session.user
+      });
+    }
 
     const isMatched = await bcrypt.compare(password, user.password);
     if (!isMatched) {
@@ -344,14 +362,14 @@ exports.deleteUser = async (req, res) => {
     // 🔁 Delete the user itself
     await User.findByIdAndDelete(user._id);
 
-    // 🔁 End session if this user is logged in
-    if (req.session.user && req.session.user._id.toString() === user._id.toString()) {
-      req.session.destroy(() => {
-        return res.redirect('/logIn');
-      });
-    } else {
-      return res.redirect('/');
-    }
+    // 🔁 Destroy session
+    req.session.destroy(err => {
+      if (err) {
+        console.error("Session destroy error:", err);
+        return res.status(500).send("Session cleanup failed");
+      }
+      return res.redirect('/logIn');
+    });
 
   } catch (err) {
     console.error('❌ Delete Error:', err);
